@@ -38,6 +38,7 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
+      /* 场景配置开始 */
       // 创建视图
       viewer = new Cesium.Viewer('cesiumContainer', {
         shouldAnimate: true // 模型默认是否运动
@@ -46,6 +47,12 @@ export default {
       viewer.scene.debugShowFramesPerSecond = true
       // 显示光照
       viewer.scene.globe.enableLighting = true
+      // 添加Terrain 增加地形数据
+      // viewer.terrainProvider = new Cesium.CesiumTerrainProvider({
+      //   url: 'https://www.supermapol.com/realspace/services/3D-stk_terrain/rest/realspace/datas/info/data/path',
+      //   requestWaterMask: true, // 开启法向量
+      //   requestVertexNormals: true// 开启水面特效
+      // })
       // 确保viewer在所需的时间。
       start = Cesium.JulianDate.fromDate(new Date(2018, 11, 12, 15))
       totalSeconds = 10
@@ -54,11 +61,16 @@ export default {
         totalSeconds,
         new Cesium.JulianDate()
       )
+      // 时钟的开始时间
       viewer.clock.startTime = start.clone()
+      // 时钟的结束时间
       viewer.clock.stopTime = stop.clone()
+      // 时钟的当前时间
       viewer.clock.currentTime = start.clone()
+      // 时钟在到达时循环
       viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP
       viewer.timeline.zoomTo(start, stop)
+      /* 场景配置结束 */
       // 通过在两个位置之间移动，为我们的车辆创建一条路径。
       position = new Cesium.SampledPositionProperty()
       for (let i = 0; i < 10; i++) {
@@ -234,7 +246,7 @@ export default {
         viewer.entities.add({
           id: `id${c}`, // 为其设置id，通过id删除实体
           position: pMap[`position${c}`],
-          orientation: new Cesium.VelocityOrientationProperty(position),
+          orientation: new Cesium.VelocityOrientationProperty(pMap[`position${c}`]),
           // 自动将车辆方向设置为其所面对的方向。
           model: {
             uri: '../static/Apps/SampleData/models/GroundVehicle/GroundVehicle.glb',

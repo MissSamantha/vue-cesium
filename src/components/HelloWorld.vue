@@ -40,6 +40,7 @@ export default {
       viewer.dataSources.add(dataSourcePromise).then((dataSource) => {
         entity = dataSource.entities.getById('CesiumMilkTruck')
         positionProperty = entity.position
+        this.start()
       })
       tileset = scene.primitives.add(
         new Cesium.Cesium3DTileset({
